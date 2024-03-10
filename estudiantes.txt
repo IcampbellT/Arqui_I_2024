@@ -1,4 +1,4 @@
-John Doe 85
+John Doe 34
 Alice Smith 92
 Bob Johnson 78
 Emily Davis 95
@@ -51,7 +51,6 @@ Clara Wilson 51
 Eli Davis 50
 Isabella Turner 49
 Owen Harris 48
-
 
 
 

@@ -2,9 +2,10 @@
 %include "linux64.inc"
 
 section .data
-; aqui se definen las varibles inicializadas
-archconf db "config.txt",0	;nombre del archivo con texto
-archdat db "estudiantes.txt",0		;nombre del archivo con los datos
+;varibles inicializadas
+
+archconf db "config_numeric.txt",0	;Configuracion
+archdat db "estudiantes.txt",0  ;Datos
 voyaqui db 0x1b,"[44;31m","voy por aqui",10
 
 exis db "x "
@@ -21,48 +22,48 @@ amarillo db 0x1b,"[33m"
 
 
 section .bss
-; aqui se se reservan espacios para variables sin definir su valor inicial
+;Valores iniciales rservados
 
-textconf resb 150 ; reserva espacio para el texto de configuracion
-textdat resb 1000 ; reserva espacio para el texto de datos
-ttc resb 150  ; reserva espacio para almacenar el texto de configuracion
-ttd resb 1000 ; reserva espacio para almacenar el texto con los datos
+textconf resb 1500 ; config
+textdat resb 2048 ; datos
+ttc resb 1500  ; config
+ttd resb 2048 ; datos
 
-byteactual resw 1	; esta variable es un contador que permite indicar que posicion se esta leyendo
-finalf1 resw 1		;indica la posicion relativa donde se encuentra el final de la fila 1
-iniciof1 resw 1		;indica la posicion relativa donde inicia la fila 1
-iniciof2 resw 1		;indica la posicion relativa donde inicia la fila 2
-finalf2 resw 1		;indica la posicion relaiva donde finaliza la fila 2
+byteactual resw 1	; contador posicion se esta leyendo
+finalf1 resw 1		;posicion relativa donde se encuentra el final de la fila 1
+iniciof1 resw 1		;posicion relativa donde inicia la fila 1
+iniciof2 resw 1		;posicion relativa donde inicia la fila 2
+finalf2 resw 1		;osicion relaiva donde finaliza la fila 2
 
 
-bytefinaltext resw 1	;almacena la posicion relativa donde finaliza el documento con los datos
+bytefinaltext resw 1	;posicion relativa final documento datos
 contadorletras resw 1
 copiadorfilas resw 1
 
-sizef1 resw 1		;almacena  el tamaño de la fila 1
-sizef2 resw 1		;almacena el tamaño de la fila 2
+sizef1 resw 1		;tamaño de la fila 1
+sizef2 resw 1		;tamaño de la fila 2
 
 bubletimes resw 1
 contadorfilas resw 1
 
 
-arraynotas resb 100		;almacena las notas en el eje x
-arrayestudiantes resb 100	;alcena la cantidad de estudiantes por grupo de notas
+arraynotas resb 2048		;notas en el eje x
+arrayestudiantes resb 2048	;cantidad de estudiantes por grupo de notas
 
 
 nota resb 1
 num1 resb 2
 num2 resb 2
 
-todaslasnotas resb 100
+todaslasnotas resb 2048
 
 
 ;Las siguientes variables pertenecen a informacion del archivo configuracion
-	nda resb 3 ;esta variable almacena la nda= nota de aprobacion
-	ndr resb 2 ;esta variabla almacena la ndr = nota de  reposicion
-	tdgn resb 2 ; almacena  el tdgn =tamaño de los grupos de notas
-	edg resb 2 ;esta variable almacena la edg = escala del grafico
-	tdo resb 1; esta variable almacena el tdo = tipo de ordenamiento
+	nda resb 3 ;almacena la nda= nota de aprobacion
+	ndr resb 2 ;almacena la ndr = nota de  reposicion
+	tdgn resb 2 ;tdgn =tamaño de los grupos de notas
+	edg resb 2 ;edg = escala del grafico
+	tdo resb 1;tdo = tipo de ordenamiento
 
 ;las siguientes variables se utilizan para realizar las comparaciones
 
@@ -81,17 +82,17 @@ todaslasnotas resb 100
 	residuox resb 1
 	tdgnb resb 1
 
-	arrayaxisy resb 100	;guarda los valores presentes en el eje y
+	arrayaxisy resb 2048	;guarda los valores presentes en el eje y
 
 
 
 
 section .text
 	global _start
-	_start:		;aqui inicia el programa
+	_start:		
 
 
-	;--------------leer el archivo de configuracion---------------------
+	;leer el archivo de config
 	; Abriendo el archivo
 		mov rax, SYS_OPEN
 		mov rdi, archconf
@@ -99,7 +100,7 @@ section .text
 		mov rdx, 0
 		syscall
 
-	;Leyendo el  archivo
+	
 		push rax
 		mov rdi, rax
 		mov rax, SYS_READ
@@ -131,7 +132,7 @@ section .text
                 mov byte [tdo], al   ; almacena en tdo el contenido de ax
 
 
-        ;-----------------Leer el archivo de datos----------------------
+        
 
         ; Abriendo el archivo
                 mov rax, SYS_OPEN
@@ -162,6 +163,7 @@ section .text
 
 
 mov word [bubletimes],0d	;se limpia la variable que se va a utilizar como contador
+
 limpiarvariables:
 ;limpiar variables a utilizar
 mov word [byteactual],0d
@@ -184,7 +186,7 @@ bublesort:
 
 
 	;Determinar el inicio y el final de la fila 1
-	; cargar letra actual
+	;cargar letra actual
         mov word bx,[byteactual]
 	mov byte al, [textdat +rbx ]
 
@@ -277,9 +279,7 @@ antesdeordenamiento:
 	;limpiar copiador filas
 		mov word [copiadorfilas],0d
 
-
-
-	;-----------------------ordenamiento---------------
+	;ordenamiento
 ordenamiento:
 	;Es tipo de ordenamiento alfabetico
 	;comprueba si la letra inicial es una A mayuscula
@@ -292,11 +292,7 @@ ordenamiento:
         je alfabetico
 
 
-
-
-
-
-;------------------------- tipo de ordenamiento por  notas-----------------
+;ordenamiento por  notas
 
 
 ;buscar nota en fila 1
@@ -342,7 +338,7 @@ ordenamiento:
 
 
 
-;--------------------------tipo de ordenamiento alfabetico-------------
+;ordenamiento alfabetico
 alfabetico:
 
 	;cargar en letra1 lo que esta en la direccion textdat+iniciof1+ contadorletras
@@ -382,7 +378,7 @@ alfabetico:
 
 
 
-	;------------letra1 es menor a letra 2------------
+	;letra1 es menor a letra 2
 letra1menor:
 	;actualiza el inicio para el siguiente loop
 	; iniciof1=iniciof2
@@ -396,7 +392,7 @@ letra1menor:
 	;Salto  a final del remplazo
 	jmp finaldelremplazo
 
-	;------------------------letra 1 es mayor que letra 2----------
+	;letra 1 es mayor que letra 2
 letra1mayor:
 	;copiar fila 2 en textdat
 	;cargar en al lo que esta en copiafila2+copiadorfilas
