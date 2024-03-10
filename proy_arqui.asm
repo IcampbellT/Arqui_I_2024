@@ -1,4 +1,3 @@
-;proyecto 1 arquitectura de Computadores
 %include "linux64.inc"
 
 section .data
@@ -18,8 +17,6 @@ verde db 0x1b,"[32m"
 rojo db 0x1b,"[31m"
 blanco db 0x1b,"[37m"
 amarillo db 0x1b,"[33m"
-
-
 
 section .bss
 ;Valores iniciales rservados
@@ -85,8 +82,6 @@ todaslasnotas resb 2048
 	arrayaxisy resb 2048	;guarda los valores presentes en el eje y
 
 
-
-
 section .text
 	global _start
 	_start:		
@@ -131,8 +126,7 @@ section .text
                 mov al,[textconf+122] ; almacena en ax el contenido de la direc$
                 mov byte [tdo], al   ; almacena en tdo el contenido de ax
 
-
-        
+       
 
         ; Abriendo el archivo
                 mov rax, SYS_OPEN
@@ -160,8 +154,6 @@ section .text
 
 
 
-
-
 mov word [bubletimes],0d	;se limpia la variable que se va a utilizar como contador
 
 limpiarvariables:
@@ -178,7 +170,6 @@ mov word [copiadorfilas],0d
 mov word [sizef1],0d
 mov word [sizef2],0d
 mov word [contadorfilas],1d
-
 
 
 
@@ -248,8 +239,6 @@ Efila2:		mov word ax,[byteactual]
 		add word ax,1d
 		mov word [byteactual],ax
 
-
-
 ;es la letra siguiente igual al final del archivo?
 
         mov byte r13b,[textdat+rax]
@@ -264,11 +253,6 @@ Efila2:		mov word ax,[byteactual]
 igualenter:
 		 cmp byte bl,10d
                 jne Efila2
-
-
-
-
-
 
 
 antesdeordenamiento:
@@ -337,7 +321,6 @@ ordenamiento:
 ;si ambos numeros son iguales se deja que se ordenen alfabeticamente
 
 
-
 ;ordenamiento alfabetico
 alfabetico:
 
@@ -374,8 +357,6 @@ alfabetico:
 
 	;es letra1 mayor a letra2?
 		jg  letra1mayor
-
-
 
 
 	;letra1 es menor a letra 2
@@ -479,9 +460,9 @@ finaldelremplazo:
 
 
 
+;Histograma
 
 
-;---------------------Histograma----------------------
 ;Determinar numero de filas del histograma
 ;cantidad de valores en eje y=division entera(100/escala del grafico)
 ;si residuo es mayor a 1, se le suma residuo al ultimo grupo
@@ -517,16 +498,7 @@ calculoejey:
 	jb calculoejey
 
 
-
-
-
-
-
-
-
-
-
-;------------tamaño de los grupos de notas------------
+;tamaño de los grupos de notas
  ;leyendo el tamaño de los grupos de notas
                 mov byte ah,[textconf+80]
 		mov byte al,[textconf+81]
@@ -570,7 +542,7 @@ finalresiduo:
 
 
 
-;----------------Clasificar notas------------------
+;Clasificacion de notas
 
 
 ;limpiar vector notas y estudiantes
@@ -673,7 +645,7 @@ nospace:	mov byte [num1],al
 
 
 
-;------------------------contar cuantas notas existen por grupo de notas-----------------
+;contar cuantas notas existen por grupo de notas
 ;limpiar registro r10b, para ser utilizado como contador
 mov byte r10b,0d
 
@@ -738,7 +710,7 @@ finalnotas:
 		jb finalnotas
 
 
-;---------------------------------------------Imprimir ---------------------------------
+;Imprimir
 		;funcion que imprimi
 		;mov rax, 1
 		;mov rdi, 1
